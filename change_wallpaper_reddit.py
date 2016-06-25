@@ -25,13 +25,15 @@ def get_top_image(subreddit):
             if url.endswith("/new"):
                 url = url.rsplit("/", 1)[0]
             id = url.rsplit("/", 1)[1].rsplit(".", 1)[0]
-            return "http://imgur.com/" + id + ".jpg"
+            return ["http://imgur.com/" + id + ".jpg", id]
 
 # Python Reddit Api Wrapper
 r = praw.Reddit(user_agent="Get top wallpaper from /r/" + args.subreddit + " by /u/ssimunic")
 
 # Get top image path
-imageUrl = get_top_image(r.get_subreddit(args.subreddit))
+imgurResult = get_top_image(r.get_subreddit(args.subreddit))
+imageUrl = imgurResult[0]
+imageId = imgurResult[1]
 
 # Request image
 response = requests.get(imageUrl)
@@ -40,7 +42,7 @@ response = requests.get(imageUrl)
 if response.status_code == 200:
     # Get home directory and location where image will be saved (default location for Ubuntu is used)
     homedir = os.path.expanduser('~')
-    saveLocation = homedir + "/Pictures/Wallpapers/" + args.subreddit + "-" + time.strftime("%d-%m-%Y") + ".jpg"
+    saveLocation = "F:/!Bibliotheken/Eigene Bilder/Wallpaper/RedditPython/" + imageId + ".jpg"
 
     # Create folders if they don't exist
     dir = os.path.dirname(saveLocation)
@@ -58,4 +60,4 @@ if response.status_code == 200:
         os.system("gsettings set org.gnome.desktop.background picture-uri file://" + saveLocation)
     if platformName.startswith("Win"):
         SPI_SETDESKWALLPAPER = 20
-        ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, saveLocation, 3)
+        ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, saveLocation, 3)
