@@ -29,6 +29,11 @@ Windows
 Follow [this guide](https://pip.pypa.io/en/stable/installing/) to install  ```pip```  and configure PATH variable.
 The rest is the same.
 
+``` 
+py -m pip install requests
+py -m pip install praw
+```
+
 Using script
 =======
 
